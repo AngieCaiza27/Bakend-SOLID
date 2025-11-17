@@ -5,7 +5,7 @@ import { dbPool } from "./config/database";
 
 async function bootstrap() {
   try {
-    await connectRedis(); // 👈 ESTO ES CRÍTICO
+    await connectRedis(); 
     await dbPool.query("SELECT 1");
 
     const app = createApp();
