@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Departamento {
+  id       Int       @id @default(autoincrement())
+  nombre   String
+  usuarios Usuario[]
+}
+
+model Usuario {
+  id             Int           @id @default(autoincrement())
+  nombre         String
+  email          String        @unique
+  rol            Rol           @default(USUARIO)
+  departamentoId Int?
+  departamento   Departamento? @relation(fields: [departamentoId], references: [id])
+  createdAt      DateTime      @default(now())
+
+  perfil Perfil?
+
+  @@index([rol, nombre]) // índice compuesto para filtrar/ordenar
+}
+
+model Perfil {
+  id        Int     @id @default(autoincrement())
+  bio       String?
+  usuarioId Int     @unique
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+}
+
+enum Rol {
+  ADMIN
+  USUARIO
+}
